@@ -717,6 +717,14 @@
                 </div>
             </a>
             <div class="header-actions">
+                <a href="/dns-provisioner/" class="btn btn-secondary btn-sm" style="text-decoration: none;" title="Open DNS Zone Provisioner">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span>DNS Provisioner</span>
+                </a>
                 <div id="authHeaderBar" class="hidden" style="display: flex; align-items: center; gap: 8px;">
                     <span id="currentDomainBadge" class="badge-domain">domain.com</span>
                     <button id="logoutBtn" class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
@@ -1972,6 +1980,18 @@
             if (!text) return '';
             return text.replace(/'/g, "\\'").replace(/"/g, "&quot;");
         }
+
+        // Prefill domain from URL query parameter (e.g. ?domain=example.com)
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const dom = params.get('domain');
+            if (dom) {
+                const inp = document.getElementById('domainInput');
+                if (inp) {
+                    inp.value = dom.trim();
+                }
+            }
+        });
     </script>
 </body>
 </html>
