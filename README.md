@@ -15,7 +15,10 @@ It specializes in provisioning and configuring dedicated **"Application Mail Acc
 
 * 🔐 **Postmaster Login Verification (Zero Enumeration):**
   * No public dropdown or domain listing is exposed.
-  * Administrators enter their specific domain, and a secure 6-digit login PIN is dispatched directly to `postmaster@<domain>`.
+  * Administrators enter their specific domain, and a secure 6-digit login PIN is dispatched directly to the domain administrator.
+  * **Dynamic DNS TXT Postmaster Routing:** Administrators can set an external notification email via a `_postmaster.<domain>` TXT record (e.g. `admin@external.org`, `mailto:admin@external.org`, or `v=postmaster1; mailto:admin@...`).
+  * If no `_postmaster` DNS record exists, defaults to `postmaster@<domain>`.
+  * Email recipient masking (`ad***n@example.com`) preserves privacy on login attempts.
   * Multi-worker database-synchronized verification codes (15-minute TTL, rate limiting, and brute-force protection).
 * 🌐 **Subdomain Mailbox Provisioning:**
   * One-click registration for subdomains (e.g. `cloud.domain.com`, `alerts.domain.com`).

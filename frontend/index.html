@@ -605,6 +605,12 @@
             border: 1px solid var(--warning-border);
         }
 
+        .status-badge-optional {
+            background: var(--bg-hover);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
         /* Alerts */
         .alert {
             padding: 10px 14px;
@@ -745,7 +751,7 @@
             <div id="authStep1">
                 <div class="auth-step-title">Domain Verification</div>
                 <p class="auth-step-desc">
-                    Enter the domain you wish to manage. A 6-digit login verification code will be sent to <strong>postmaster@(domain)</strong>.
+                    Enter the domain you wish to manage. A 6-digit login verification code will be sent to <strong>postmaster@(domain)</strong> or your <code>_postmaster</code> DNS TXT record.
                 </p>
 
                 <div class="form-group">
@@ -766,7 +772,8 @@
             <div id="authStep2" class="hidden">
                 <div class="auth-step-title">Enter Verification Code</div>
                 <p class="auth-step-desc">
-                    Code dispatched to <strong id="sentTargetEmail">postmaster@...</strong>.
+                    Code dispatched to <strong id="sentTargetEmail">postmaster@...</strong>
+                    <span id="sentTargetDnsBadge" class="hidden" style="display: inline-block; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: var(--bg-hover); border: 1px solid var(--border-color); color: var(--text-muted); margin-left: 6px;"></span>
                 </p>
 
                 <div class="pin-inputs">
@@ -1322,10 +1329,21 @@
                 }
 
                 currentDomain = targetDomain;
-                document.getElementById('sentTargetEmail').textContent = `postmaster@${targetDomain}`;
+                const targetDisplay = data.target_masked || data.target || `postmaster@${targetDomain}`;
+                document.getElementById('sentTargetEmail').textContent = targetDisplay;
+                const badgeEl = document.getElementById('sentTargetDnsBadge');
+                if (badgeEl) {
+                    if (data.target_type === 'dns_record') {
+                        badgeEl.textContent = 'via DNS TXT';
+                        badgeEl.classList.remove('hidden');
+                    } else {
+                        badgeEl.textContent = 'default postmaster';
+                        badgeEl.classList.remove('hidden');
+                    }
+                }
                 document.getElementById('authStep1').classList.add('hidden');
                 document.getElementById('authStep2').classList.remove('hidden');
-                showAlert(`Verification code sent to postmaster@${targetDomain}`, 'success');
+                showAlert(data.message || `Verification code sent to ${targetDisplay}`, 'success');
 
                 startCountdown(900); // 15 mins
                 document.getElementById('pin0').focus();
@@ -1534,8 +1552,8 @@
 
                 (data.records || []).forEach(r => {
                     const tr = document.createElement('tr');
-                    const badgeClass = r.status === 'ok' ? 'status-badge-ok' : (r.status === 'warning' ? 'status-badge-warning' : 'status-badge-missing');
-                    const badgeText = r.status === 'ok' ? 'Active' : (r.status === 'warning' ? 'Warning' : 'Missing');
+                    const badgeClass = r.status === 'ok' ? 'status-badge-ok' : (r.status === 'warning' ? 'status-badge-warning' : (r.status === 'optional' ? 'status-badge-optional' : 'status-badge-missing'));
+                    const badgeText = r.status === 'ok' ? 'Active' : (r.status === 'warning' ? 'Warning' : (r.status === 'optional' ? 'Optional' : 'Missing'));
 
                     tr.innerHTML = `
                         <td><span class="status-badge ${badgeClass}">${badgeText}</span></td>

@@ -279,6 +279,13 @@ def build_dns_records(domain: str) -> List[Dict[str, Any]]:
             "purpose": "DMARC Alignment Policy"
         },
         {
+            "record_type": "TXT",
+            "name": "_postmaster",
+            "priority": None,
+            "value": "admin@yourdomain.com",
+            "purpose": "Custom Login Verification Recipient (Optional)"
+        },
+        {
             "record_type": "CNAME",
             "name": "autoconfig",
             "priority": None,
@@ -447,7 +454,25 @@ def check_live_dns(domain: str) -> Dict[str, Any]:
             ad_item["message"] = "Not found in DNS zone"
     records.append(ad_item)
 
-    all_ok = all(r["status"] == "ok" for r in records)
+    # 7. Postmaster Login Recipient TXT (Optional)
+    pm_email, pm_source, pm_record = verification.resolve_postmaster_recipient(domain)
+    pm_item = {
+        "record_type": "TXT",
+        "name": "_postmaster",
+        "expected": "admin@yourdomain.com",
+        "purpose": "Custom Login Verification Recipient"
+    }
+    if pm_source == "dns_record":
+        pm_item["detected"] = pm_email
+        pm_item["status"] = "ok"
+        pm_item["message"] = f"Custom: {pm_email} (via {pm_record})"
+    else:
+        pm_item["detected"] = None
+        pm_item["status"] = "optional"
+        pm_item["message"] = f"Default: postmaster@{domain} (no custom TXT set)"
+    records.append(pm_item)
+
+    all_ok = all(r["status"] in ("ok", "optional") for r in records)
     return {
         "domain": domain,
         "checked_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -528,15 +553,18 @@ def request_login_code(req: CodeRequest, request: Request):
     if "," in client_ip:
         client_ip = client_ip.split(",")[0].strip()
 
-    ok, msg = verification.request_verification_code(clean_domain, client_ip)
+    ok, msg, meta = verification.request_verification_code(clean_domain, client_ip)
     if not ok:
         raise HTTPException(status_code=429 if "wait" in msg.lower() else 500, detail=msg)
 
     return {
         "status": "ok",
-        "message": f"Verification code sent to postmaster@{clean_domain}",
+        "message": msg,
         "domain": clean_domain,
-        "target": f"postmaster@{clean_domain}"
+        "target": meta.get("recipient"),
+        "target_masked": meta.get("recipient_masked"),
+        "target_type": meta.get("source"),
+        "record_name": meta.get("record_name")
     }
 
 @app.post("/api/v1/auth/verify-code", tags=["Auth"], summary="Verify Postmaster Login Code")
