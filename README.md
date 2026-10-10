@@ -1,4 +1,4 @@
-# Ternis Mail Manager 📬
+# Ternis Mail Manager
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -197,4 +197,4 @@ Released under the **[MIT License](LICENSE)**.
 Developed by **Ternis** ([ternis.dev](https://ternis.dev) / [ternis.org](https://ternis.org)).
 Code repository hosted at:
 * **Codeberg:** [codeberg.org/ternis/ternis-mail-manager](https://codeberg.org/ternis/ternis-mail-manager)
-* **GitHub:** [github.com/ternis-dev/ternis-mail-manager](https://github.com/ternis-dev/ternis-mail-manager)
+* **GitHub:** [github.com/ternis-net/ternis-mail-manager](https://github.com/ternis-net/ternis-mail-manager)

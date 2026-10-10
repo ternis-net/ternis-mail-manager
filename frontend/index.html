@@ -1,37 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Mail Manager - one.mx.ternis.net</title>
+    <title>Application Mail Accounts - one.mx.ternis.net</title>
     <style>
         :root {
-            --bg-body: #0b1120;
-            --bg-card: #1e293b;
-            --bg-card-sub: #162032;
-            --bg-input: #0f172a;
-            --border: #334155;
-            --border-hover: #475569;
-            --primary: #0284c7;
-            --primary-hover: #0369a1;
-            --primary-light: #38bdf8;
-            --accent: #06b6d4;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --text-dim: #64748b;
+            --bg: #ffffff;
+            --bg-sub: #f9fafb;
+            --bg-input: #ffffff;
+            --border: #e5e7eb;
+            --border-hover: #d1d5db;
+            --border-focus: #111827;
+            --text: #111827;
+            --text-muted: #6b7280;
+            --text-dim: #9ca3af;
+            --btn-bg: #111827;
+            --btn-text: #ffffff;
+            --btn-hover: #1f2937;
+            --btn-sec-bg: #f3f4f6;
+            --btn-sec-text: #111827;
+            --btn-sec-border: #e5e7eb;
+            --btn-sec-hover: #e5e7eb;
+            --code-bg: #f3f4f6;
+            --code-text: #111827;
+            --code-border: #e5e7eb;
+            --badge-bg: #f3f4f6;
+            --badge-text: #374151;
+            --badge-border: #e5e7eb;
+            --success: #15803d;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+            --error: #b91c1c;
+            --error-bg: #fef2f2;
+            --error-border: #fecaca;
+            --info: #2563eb;
+            --info-bg: #eff6ff;
+            --info-border: #bfdbfe;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        [data-theme="dark"] {
+            --bg: #09090b;
+            --bg-sub: #121215;
+            --bg-input: #121215;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --border-focus: #fafafa;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --text-dim: #71717a;
+            --btn-bg: #fafafa;
+            --btn-text: #09090b;
+            --btn-hover: #e4e4e7;
+            --btn-sec-bg: #18181b;
+            --btn-sec-text: #fafafa;
+            --btn-sec-border: #27272a;
+            --btn-sec-hover: #27272a;
+            --code-bg: #141417;
+            --code-text: #f4f4f5;
+            --code-border: #27272a;
+            --badge-bg: #18181b;
+            --badge-text: #a1a1aa;
+            --badge-border: #27272a;
+            --success: #4ade80;
+            --success-bg: #052e16;
+            --success-border: #14532d;
+            --error: #f87171;
+            --error-bg: #450a0a;
+            --error-border: #7f1d1d;
+            --info: #60a5fa;
+            --info-bg: #172554;
+            --info-border: #1e3a8a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            padding: 24px 16px;
+            padding: 32px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -39,15 +93,16 @@
 
         .container {
             width: 100%;
-            max-width: 960px;
+            max-width: 860px;
         }
 
+        /* Header */
         header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -56,24 +111,25 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            color: var(--text-main);
+            color: var(--text);
         }
 
         .brand-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            color: var(--text);
+            background: var(--bg-sub);
         }
 
         .brand-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
         }
 
         .brand-subtitle {
@@ -81,184 +137,164 @@
             color: var(--text-muted);
         }
 
-        .auth-bar {
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            background: var(--bg-sub);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text);
+            border-color: var(--border-hover);
         }
 
         .badge-domain {
-            background: #0c4a6e;
-            color: #7dd3fc;
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: monospace;
+            border: 1px solid var(--badge-border);
             display: flex;
             align-items: center;
             gap: 6px;
-            border: 1px solid #0284c7;
         }
 
+        /* Buttons */
         .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 9px 18px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             text-decoration: none;
+            transition: background-color 0.15s, border-color 0.15s;
         }
 
-        .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: #334155; color: var(--text-main); }
-        .btn-secondary:hover { background: #475569; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: var(--danger-hover); }
-        .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; }
+        .btn:hover { background: var(--btn-hover); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+        .btn-secondary {
+            background: var(--btn-sec-bg);
+            color: var(--btn-sec-text);
+            border: 1px solid var(--btn-sec-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--btn-sec-hover);
+            border-color: var(--border-hover);
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--error);
+            border: 1px solid var(--error-border);
+        }
+
+        .btn-danger:hover {
+            background: var(--error-bg);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+
+        /* Cards */
         .card {
-            background: var(--bg-card);
+            background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 28px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 24px;
             margin-bottom: 24px;
         }
 
-        /* --- Auth View --- */
+        /* Auth Card */
         .auth-card {
-            max-width: 520px;
-            margin: 40px auto;
-            text-align: center;
+            max-width: 440px;
+            margin: 48px auto;
         }
 
         .auth-step-title {
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-            font-weight: 700;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
         .auth-step-desc {
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.875rem;
             line-height: 1.5;
             margin-bottom: 24px;
         }
 
+        /* Forms */
         .form-group {
+            margin-bottom: 18px;
             text-align: left;
-            margin-bottom: 20px;
         }
 
         .form-label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
         }
 
         .form-input, .form-select {
             width: 100%;
-            padding: 12px 14px;
+            padding: 9px 12px;
             background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 1rem;
-            transition: border-color 0.2s;
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
             outline: none;
+            transition: border-color 0.15s;
         }
 
         .form-input:focus, .form-select:focus {
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+            border-color: var(--border-focus);
         }
-
-        /* PIN input row */
-        .pin-inputs {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 24px 0;
-        }
-
-        .pin-box {
-            width: 48px;
-            height: 56px;
-            font-size: 1.6rem;
-            text-align: center;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-weight: 700;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .pin-box:focus {
-            border-color: var(--primary-light);
-            background: #172554;
-            transform: scale(1.05);
-        }
-
-        /* Presets Grid */
-        .presets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .preset-pill {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .preset-pill:hover {
-            border-color: var(--primary-light);
-            background: #162a45;
-            transform: translateY(-2px);
-        }
-
-        .preset-pill.active {
-            border-color: var(--primary-light);
-            background: #03456c;
-            box-shadow: 0 0 0 1px var(--primary-light);
-        }
-
-        .preset-icon { font-size: 24px; }
-        .preset-name { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
-        .preset-prefix { font-size: 0.75rem; color: var(--text-muted); font-family: monospace; }
 
         .input-addon-group {
             display: flex;
             align-items: center;
             background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             overflow: hidden;
+            transition: border-color 0.15s;
+        }
+
+        .input-addon-group:focus-within {
+            border-color: var(--border-focus);
         }
 
         .input-addon-group .form-input {
@@ -268,30 +304,100 @@
         }
 
         .input-addon {
-            padding: 0 14px;
+            padding: 0 12px;
             color: var(--text-muted);
-            font-size: 0.95rem;
-            user-select: none;
-            background: rgba(255,255,255,0.03);
+            font-size: 0.85rem;
+            background: var(--bg-sub);
             border-left: 1px solid var(--border);
             align-self: stretch;
             display: flex;
             align-items: center;
             font-family: monospace;
+            user-select: none;
+        }
+
+        /* PIN input boxes */
+        .pin-inputs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pin-box {
+            width: 44px;
+            height: 52px;
+            font-size: 1.4rem;
+            text-align: center;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .pin-box:focus {
+            border-color: var(--border-focus);
+        }
+
+        /* Presets Grid */
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .preset-pill {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s, background-color 0.15s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preset-pill:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-sub);
+        }
+
+        .preset-pill.active {
+            border-color: var(--border-focus);
+            background: var(--bg-sub);
+        }
+
+        .preset-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .preset-prefix {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            font-family: monospace;
         }
 
         /* Result Snippet Box */
         .snippet-card {
-            background: #0f172a;
-            border: 1px solid #1e3a8a;
-            border-radius: 12px;
+            background: var(--bg-sub);
+            border: 1px solid var(--border);
+            border-radius: 6px;
             padding: 20px;
             margin-top: 24px;
         }
 
         .tabs {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             border-bottom: 1px solid var(--border);
             margin-bottom: 16px;
             overflow-x: auto;
@@ -301,51 +407,62 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            padding: 8px 14px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 8px 12px;
+            font-size: 0.825rem;
+            font-weight: 500;
             cursor: pointer;
             border-bottom: 2px solid transparent;
             margin-bottom: -1px;
-            transition: all 0.2s;
             white-space: nowrap;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
         }
 
         .tab-btn.active {
-            color: var(--primary-light);
-            border-bottom-color: var(--primary-light);
+            color: var(--text);
+            border-bottom-color: var(--border-focus);
+            font-weight: 600;
         }
 
         pre {
-            background: #020617;
-            padding: 16px;
-            border-radius: 8px;
-            color: #e2e8f0;
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 0.85rem;
+            background: var(--code-bg);
+            color: var(--code-text);
+            border: 1px solid var(--code-border);
+            padding: 14px;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+            font-size: 0.8rem;
             line-height: 1.5;
             overflow-x: auto;
-            border: 1px solid #1e293b;
             position: relative;
         }
 
         .copy-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #1e293b;
-            color: #94a3b8;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            padding: 4px 10px;
+            top: 8px;
+            right: 8px;
+            background: var(--bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 8px;
             font-size: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.15s, border-color 0.15s;
         }
 
-        .copy-btn:hover { background: #334155; color: white; }
+        .copy-btn:hover {
+            color: var(--text);
+            border-color: var(--border-hover);
+        }
 
-        /* Mailbox Table */
+        /* Table */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -354,52 +471,68 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 16px;
+            margin-top: 12px;
         }
 
         th {
             text-align: left;
-            padding: 10px 14px;
-            font-size: 0.75rem;
+            padding: 8px 12px;
+            font-size: 0.72rem;
             text-transform: uppercase;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border);
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
         }
 
         td {
-            padding: 12px 14px;
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border);
-            font-size: 0.9rem;
+            font-size: 0.875rem;
         }
 
         tr:hover td {
-            background: rgba(255,255,255,0.02);
+            background: var(--bg-sub);
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             display: inline-block;
             background: var(--success);
             margin-right: 6px;
         }
 
+        /* Alerts */
         .alert {
-            padding: 12px 16px;
-            border-radius: 8px;
+            padding: 10px 14px;
+            border-radius: 6px;
             margin-bottom: 16px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .alert-error { background: #451a1a; color: #fca5a5; border: 1px solid #7f1d1d; }
-        .alert-success { background: #064e3b; color: #6ee7b7; border: 1px solid #047857; }
-        .alert-info { background: #0c4a6e; color: #7dd3fc; border: 1px solid #0284c7; }
+        .alert-error {
+            background: var(--error-bg);
+            color: var(--error);
+            border: 1px solid var(--error-border);
+        }
 
+        .alert-success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .alert-info {
+            background: var(--info-bg);
+            color: var(--info);
+            border: 1px solid var(--info-border);
+        }
+
+        /* Utilities */
         .hidden { display: none !important; }
         .flex { display: flex; }
         .flex-between { justify-content: space-between; align-items: center; }
@@ -411,8 +544,7 @@
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -421,24 +553,43 @@
         }
 
         .modal {
-            background: var(--bg-card);
+            background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            max-width: 500px;
+            border-radius: 8px;
+            max-width: 440px;
             width: 100%;
             padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
-        .modal-title { font-size: 1.2rem; font-weight: 700; }
-        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+        .modal-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        svg {
+            stroke-width: 1.75;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -446,15 +597,38 @@
         <!-- Top Navigation Bar -->
         <header>
             <a href="/" class="brand">
-                <div class="brand-icon">📬</div>
+                <div class="brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
                 <div>
                     <div class="brand-title">one.mx.ternis.net</div>
                     <div class="brand-subtitle">Application Mail Accounts</div>
                 </div>
             </a>
-            <div id="authHeaderBar" class="auth-bar hidden">
-                <span id="currentDomainBadge" class="badge-domain">🌐 domain.com</span>
-                <button id="logoutBtn" class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+            <div class="header-actions">
+                <div id="authHeaderBar" class="hidden" style="display: flex; align-items: center; gap: 8px;">
+                    <span id="currentDomainBadge" class="badge-domain">domain.com</span>
+                    <button id="logoutBtn" class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle color theme" aria-label="Toggle theme">
+                    <svg id="themeIconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="hidden">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg id="themeIconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
             </div>
         </header>
 
@@ -465,19 +639,24 @@
         <!-- VIEW 1: AUTHENTICATION (DOMAIN & PIN CODE) -->
         <!-- ========================================== -->
         <div id="viewAuth" class="card auth-card">
-            <!-- STEP 1: Select Domain -->
+            <!-- STEP 1: Enter Domain -->
+            <div id="authStep1">
                 <div class="auth-step-title">Domain Verification</div>
                 <p class="auth-step-desc">
-                    Enter the domain you wish to manage. A secure 6-digit login code will be dispatched to <strong>postmaster@(yourdomain)</strong>.
+                    Enter the domain you wish to manage. A 6-digit login verification code will be sent to <strong>postmaster@(domain)</strong>.
                 </p>
 
                 <div class="form-group">
                     <label class="form-label">Domain Name</label>
-                    <input type="text" id="domainInput" class="form-input" placeholder="e.g. example.com" autocomplete="off" autofocus>
+                    <input type="text" id="domainInput" class="form-input" placeholder="example.com" autocomplete="off" autofocus>
                 </div>
 
                 <button id="btnRequestCode" class="btn" style="width: 100%;" onclick="requestCode()">
-                    <span>✉️ Send Verification Code to Postmaster</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    <span>Send Verification Code</span>
                 </button>
             </div>
 
@@ -485,8 +664,7 @@
             <div id="authStep2" class="hidden">
                 <div class="auth-step-title">Enter Verification Code</div>
                 <p class="auth-step-desc">
-                    We sent a 6-digit code to <strong id="sentTargetEmail">postmaster@...</strong>.<br>
-                    Please enter it below to verify domain ownership.
+                    Code dispatched to <strong id="sentTargetEmail">postmaster@...</strong>.
                 </p>
 
                 <div class="pin-inputs">
@@ -498,20 +676,24 @@
                     <input type="text" maxlength="1" class="pin-box" id="pin5" inputmode="numeric">
                 </div>
 
-                <div id="countdownText" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                    Code expires in: <span id="countdownTimer" style="color: var(--primary-light); font-weight: 600;">15:00</span>
+                <div id="countdownText" style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 20px;">
+                    Code expires in: <span id="countdownTimer" style="color: var(--text); font-weight: 600; font-family: monospace;">15:00</span>
                 </div>
 
-                <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 8px;">
                     <button class="btn btn-secondary" style="flex: 1;" onclick="resetAuthStep()">Back</button>
                     <button id="btnVerifyCode" class="btn" style="flex: 2;" onclick="verifyCode()">
-                        <span>🔐 Verify &amp; Log In</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span>Verify and Continue</span>
                     </button>
                 </div>
 
-                <div class="mt-4">
-                    <a href="javascript:void(0)" onclick="requestCode(true)" style="color: var(--primary-light); font-size: 0.85rem; text-decoration: none;">
-                        Didn't receive code? Resend
+                <div class="mt-4" style="text-align: center;">
+                    <a href="javascript:void(0)" onclick="requestCode(true)" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">
+                        Resend code
                     </a>
                 </div>
             </div>
@@ -525,83 +707,87 @@
             <div class="card">
                 <div class="flex flex-between">
                     <div>
-                        <h2 style="font-size: 1.3rem; font-weight: 700;">Provision Application Mail Account</h2>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
-                            Quickly create dedicated SMTP mailboxes for web apps, cloud storage, and automated notification services.
+                        <h2 style="font-size: 1.15rem; font-weight: 600;">Provision Application Account</h2>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">
+                            Configure dedicated mailboxes for backend applications, storage systems, and transactional services.
                         </p>
                     </div>
                 </div>
 
                 <div class="mt-4">
-                    <label class="form-label">Application Presets</label>
+                    <label class="form-label">Application Template</label>
                     <div class="presets-grid">
-                        <div class="preset-pill active" onclick="applyPreset('nextcloud')">
-                            <span class="preset-icon">☁️</span>
+                        <div class="preset-pill active" onclick="applyPreset('nextcloud', event)">
                             <span class="preset-name">Nextcloud</span>
                             <span class="preset-prefix">nextcloud@</span>
                         </div>
-                        <div class="preset-pill" onclick="applyPreset('wordpress')">
-                            <span class="preset-icon">📰</span>
+                        <div class="preset-pill" onclick="applyPreset('wordpress', event)">
                             <span class="preset-name">WordPress</span>
                             <span class="preset-prefix">wordpress@</span>
                         </div>
-                        <div class="preset-pill" onclick="applyPreset('gitlab')">
-                            <span class="preset-icon">🦊</span>
+                        <div class="preset-pill" onclick="applyPreset('gitlab', event)">
                             <span class="preset-name">GitLab</span>
                             <span class="preset-prefix">git@</span>
                         </div>
-                        <div class="preset-pill" onclick="applyPreset('backend')">
-                            <span class="preset-icon">⚡</span>
-                            <span class="preset-name">App Backend</span>
+                        <div class="preset-pill" onclick="applyPreset('backend', event)">
+                            <span class="preset-name">Backend API</span>
                             <span class="preset-prefix">app-backend@</span>
                         </div>
-                        <div class="preset-pill" onclick="applyPreset('alerts')">
-                            <span class="preset-icon">🔔</span>
+                        <div class="preset-pill" onclick="applyPreset('alerts', event)">
                             <span class="preset-name">Monitoring</span>
                             <span class="preset-prefix">alerts@</span>
                         </div>
-                        <div class="preset-pill" onclick="applyPreset('custom')">
-                            <span class="preset-icon">✉️</span>
-                            <span class="preset-name">Custom App</span>
-                            <span class="preset-prefix">custom@</span>
+                        <div class="preset-pill" onclick="applyPreset('custom', event)">
+                            <span class="preset-name">Custom</span>
+                            <span class="preset-prefix">mailer@</span>
                         </div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                     <div class="form-group">
                         <label class="form-label">Account Local Part</label>
                         <div class="input-addon-group">
-                            <input type="text" id="appLocalPart" class="form-input" value="nextcloud" placeholder="e.g. nextcloud">
+                            <input type="text" id="appLocalPart" class="form-input" value="nextcloud" placeholder="nextcloud">
                             <span id="domainSuffixAddon" class="input-addon">@domain.com</span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Application Name / Label</label>
-                        <input type="text" id="appName" class="form-input" value="Nextcloud Storage" placeholder="e.g. Nextcloud VM">
+                        <label class="form-label">Application Description</label>
+                        <input type="text" id="appName" class="form-input" value="Nextcloud Storage" placeholder="Nextcloud Server">
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
                     <div class="form-group">
-                        <div class="flex flex-between" style="margin-bottom: 8px;">
-                            <label class="form-label" style="margin-bottom: 0;">Secure Mailbox Password</label>
-                            <a href="javascript:void(0)" onclick="generateNewPassword()" style="font-size: 0.8rem; color: var(--primary-light); text-decoration: none;">
-                                🔄 Generate Strong Password
+                        <div class="flex flex-between" style="margin-bottom: 6px;">
+                            <label class="form-label" style="margin-bottom: 0;">Mailbox Password</label>
+                            <a href="javascript:void(0)" onclick="generateNewPassword()" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <polyline points="1 20 1 14 7 14"></polyline>
+                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                </svg>
+                                Regenerate
                             </a>
                         </div>
                         <div class="input-addon-group">
-                            <input type="text" id="appPassword" class="form-input" style="font-family: monospace;">
-                            <span class="input-addon" style="cursor: pointer;" onclick="copyPasswordInput()">📋 Copy</span>
+                            <input type="text" id="appPassword" class="form-input" style="font-family: monospace; font-size: 0.85rem;">
+                            <span class="input-addon" style="cursor: pointer;" onclick="copyPasswordInput()" title="Copy password">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Storage Quota</label>
+                        <label class="form-label">Quota</label>
                         <select id="appQuota" class="form-select">
                             <option value="1.0">1 GB (Transactional)</option>
-                            <option value="2.0" selected>2 GB (Standard App)</option>
+                            <option value="2.0" selected>2 GB (Standard)</option>
                             <option value="5.0">5 GB (High Volume)</option>
                             <option value="10.0">10 GB (Full Mailbox)</option>
                         </select>
@@ -609,83 +795,108 @@
                 </div>
 
                 <div class="mt-2 flex flex-between">
-                    <span style="font-size: 0.85rem; color: var(--text-muted);">
-                        Server: <strong style="color: var(--text-main);">one.mx.ternis.net</strong> (Ports 465 SSL / 587 STARTTLS)
+                    <span style="font-size: 0.8rem; color: var(--text-dim); font-family: monospace;">
+                        Host: one.mx.ternis.net (465 SSL / 587 STARTTLS)
                     </span>
                     <button id="btnCreateApp" class="btn" onclick="createAppAccount()">
-                        <span>🚀 Provision Account &amp; Generate Snippets</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        <span>Provision Account</span>
                     </button>
                 </div>
 
                 <!-- Instant Result & Ready-to-Paste Config Snippets -->
                 <div id="provisionResultCard" class="snippet-card hidden">
-                    <div class="flex flex-between" style="margin-bottom: 16px;">
+                    <div class="flex flex-between" style="margin-bottom: 14px;">
                         <div>
-                            <span style="background: #064e3b; color: #34d399; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 4px;">
-                                ✓ PROVISIONED SUCCESSFULLY
+                            <span style="color: var(--success); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                                Account Created
                             </span>
-                            <h3 id="resultEmailTitle" style="font-size: 1.15rem; margin-top: 8px; color: #38bdf8;">nextcloud@domain.com</h3>
+                            <h3 id="resultEmailTitle" style="font-size: 1.05rem; margin-top: 4px; font-family: monospace;">nextcloud@domain.com</h3>
                         </div>
-                        <button class="btn btn-secondary btn-sm" onclick="dismissResultCard()">Close</button>
+                        <button class="btn btn-secondary btn-sm" onclick="dismissResultCard()">Dismiss</button>
                     </div>
 
                     <!-- Credential Quick View -->
-                    <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 12px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 0.85rem;">
+                    <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 0.8rem;">
                         <div>
-                            <span style="color: var(--text-muted); display: block; font-size: 0.75rem;">SMTP HOST</span>
-                            <strong>one.mx.ternis.net</strong>
+                            <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Host</span>
+                            <span style="font-family: monospace;">one.mx.ternis.net</span>
                         </div>
                         <div>
-                            <span style="color: var(--text-muted); display: block; font-size: 0.75rem;">PORTS</span>
-                            <strong>465 (SSL/TLS) &bull; 587 (STARTTLS)</strong>
+                            <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Ports</span>
+                            <span style="font-family: monospace;">465 SSL &bull; 587 TLS</span>
                         </div>
                         <div>
-                            <span style="color: var(--text-muted); display: block; font-size: 0.75rem;">USERNAME</span>
-                            <strong id="resultUsername">nextcloud@...</strong>
+                            <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Username</span>
+                            <span id="resultUsername" style="font-family: monospace;">nextcloud@...</span>
                         </div>
                     </div>
 
                     <!-- Config Snippet Tabs -->
                     <div class="tabs">
-                        <button class="tab-btn active" onclick="switchSnippetTab('nextcloud-ui')">☁️ Nextcloud UI Form</button>
-                        <button class="tab-btn" onclick="switchSnippetTab('nextcloud-php')">☁️ Nextcloud config.php</button>
-                        <button class="tab-btn" onclick="switchSnippetTab('env')">⚡ Standard .env</button>
-                        <button class="tab-btn" onclick="switchSnippetTab('starttls')">🔒 STARTTLS (Port 587)</button>
+                        <button class="tab-btn active" onclick="switchSnippetTab('nextcloud-ui')">Nextcloud UI Settings</button>
+                        <button class="tab-btn" onclick="switchSnippetTab('nextcloud-php')">config.php</button>
+                        <button class="tab-btn" onclick="switchSnippetTab('env')">Environment (.env)</button>
+                        <button class="tab-btn" onclick="switchSnippetTab('starttls')">STARTTLS (587)</button>
                     </div>
 
                     <!-- Tab Contents -->
                     <div id="tabContentNextcloudUi">
-                        <div style="background: #091322; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6;">
-                            <div style="color: #38bdf8; font-weight: 600; margin-bottom: 8px;">Nextcloud Settings &rarr; Administration &rarr; Basic Settings &rarr; Email Server</div>
+                        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 0.8rem; line-height: 1.5;">
+                            <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 8px;">
+                                Basic Settings &rarr; Email Server
+                            </div>
                             <table style="margin-top: 0;">
-                                <tr><td style="color: #94a3b8; width: 180px;">Send mode:</td><td><strong>SMTP</strong></td></tr>
-                                <tr><td style="color: #94a3b8;">Encryption:</td><td><strong>SSL/TLS</strong></td></tr>
-                                <tr><td style="color: #94a3b8;">From address:</td><td><strong id="ncFromAddr">nextcloud</strong> @ <strong id="ncFromDomain">domain.com</strong></td></tr>
-                                <tr><td style="color: #94a3b8;">Authentication:</td><td><strong>Credentials required (checked)</strong></td></tr>
-                                <tr><td style="color: #94a3b8;">Authentication method:</td><td><strong>LOGIN</strong></td></tr>
-                                <tr><td style="color: #94a3b8;">Server address:</td><td><strong>one.mx.ternis.net</strong> : <strong>465</strong></td></tr>
-                                <tr><td style="color: #94a3b8;">Credentials:</td><td><span id="ncUser">...</span> / <span id="ncPass" style="font-family: monospace;">...</span></td></tr>
+                                <tr><td style="color: var(--text-muted); width: 160px;">Send mode:</td><td><strong>SMTP</strong></td></tr>
+                                <tr><td style="color: var(--text-muted);">Encryption:</td><td><strong>SSL/TLS</strong></td></tr>
+                                <tr><td style="color: var(--text-muted);">From address:</td><td><span id="ncFromAddr" style="font-family: monospace;">nextcloud</span> @ <span id="ncFromDomain" style="font-family: monospace;">domain.com</span></td></tr>
+                                <tr><td style="color: var(--text-muted);">Authentication:</td><td><strong>Credentials required (enabled)</strong></td></tr>
+                                <tr><td style="color: var(--text-muted);">Authentication method:</td><td><strong>LOGIN</strong></td></tr>
+                                <tr><td style="color: var(--text-muted);">Server address:</td><td><strong style="font-family: monospace;">one.mx.ternis.net</strong> : <strong style="font-family: monospace;">465</strong></td></tr>
+                                <tr><td style="color: var(--text-muted);">Credentials:</td><td><span id="ncUser" style="font-family: monospace;">...</span> / <span id="ncPass" style="font-family: monospace;">...</span></td></tr>
                             </table>
                         </div>
                     </div>
 
                     <div id="tabContentNextcloudPhp" class="hidden">
                         <div style="position: relative;">
-                            <button class="copy-btn" onclick="copySnippet('codeNextcloudPhp')">📋 Copy PHP</button>
+                            <button class="copy-btn" onclick="copySnippet('codeNextcloudPhp')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                Copy
+                            </button>
                             <pre><code id="codeNextcloudPhp"></code></pre>
                         </div>
                     </div>
 
                     <div id="tabContentEnv" class="hidden">
                         <div style="position: relative;">
-                            <button class="copy-btn" onclick="copySnippet('codeEnv')">📋 Copy .env</button>
+                            <button class="copy-btn" onclick="copySnippet('codeEnv')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                Copy
+                            </button>
                             <pre><code id="codeEnv"></code></pre>
                         </div>
                     </div>
 
                     <div id="tabContentStarttls" class="hidden">
                         <div style="position: relative;">
-                            <button class="copy-btn" onclick="copySnippet('codeStarttls')">📋 Copy STARTTLS</button>
+                            <button class="copy-btn" onclick="copySnippet('codeStarttls')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                Copy
+                            </button>
                             <pre><code id="codeStarttls"></code></pre>
                         </div>
                     </div>
@@ -696,12 +907,19 @@
             <div class="card">
                 <div class="flex flex-between">
                     <div>
-                        <h2 style="font-size: 1.2rem; font-weight: 700;">Existing Accounts for this Domain</h2>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">
-                            Virtual mailboxes and application accounts configured on one.mx.ternis.net
+                        <h2 style="font-size: 1.05rem; font-weight: 600;">Configured Accounts</h2>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">
+                            Active virtual accounts for this domain
                         </p>
                     </div>
-                    <button class="btn btn-secondary btn-sm" onclick="loadMailboxes()">🔄 Refresh</button>
+                    <button class="btn btn-secondary btn-sm" onclick="loadMailboxes()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                        Refresh
+                    </button>
                 </div>
 
                 <div class="table-responsive">
@@ -709,14 +927,14 @@
                         <thead>
                             <tr>
                                 <th>Status</th>
-                                <th>Mailbox Address</th>
+                                <th>Address</th>
                                 <th>Quota</th>
                                 <th>Created</th>
                                 <th style="text-align: right;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="mailboxesTableBody">
-                            <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">Loading accounts...</td></tr>
+                            <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 18px;">Loading accounts...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -728,27 +946,32 @@
     <div id="resetModal" class="modal-overlay hidden">
         <div class="modal">
             <div class="modal-header">
-                <div class="modal-title">Reset Account Password</div>
-                <button class="modal-close" onclick="closeResetModal()">&times;</button>
+                <div class="modal-title">Reset Password</div>
+                <button class="modal-close" onclick="closeResetModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
-            <p id="resetModalTarget" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
+            <p id="resetModalTarget" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
                 Resetting password for mailbox...
             </p>
             <div class="form-group">
                 <div class="flex flex-between" style="margin-bottom: 6px;">
                     <label class="form-label" style="margin-bottom: 0;">New Password</label>
-                    <a href="javascript:void(0)" onclick="generateResetPassword()" style="font-size: 0.8rem; color: var(--primary-light); text-decoration: none;">
-                        🔄 Generate Random
+                    <a href="javascript:void(0)" onclick="generateResetPassword()" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none;">
+                        Regenerate
                     </a>
                 </div>
                 <div class="input-addon-group">
-                    <input type="text" id="resetNewPassword" class="form-input" style="font-family: monospace;">
+                    <input type="text" id="resetNewPassword" class="form-input" style="font-family: monospace; font-size: 0.85rem;">
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 24px;">
+            <div style="display: flex; gap: 8px; margin-top: 20px;">
                 <button class="btn btn-secondary" style="flex: 1;" onclick="closeResetModal()">Cancel</button>
                 <button id="btnSubmitReset" class="btn" style="flex: 2;" onclick="submitPasswordReset()">
-                    Update Password
+                    Save Password
                 </button>
             </div>
         </div>
@@ -763,16 +986,42 @@
         let currentResetEmail = null;
 
         const PRESETS = {
-            nextcloud: { prefix: 'nextcloud', name: 'Nextcloud Cloud Storage', quota: '2.0' },
+            nextcloud: { prefix: 'nextcloud', name: 'Nextcloud Storage', quota: '2.0' },
             wordpress: { prefix: 'wordpress', name: 'WordPress Notifications', quota: '1.0' },
             gitlab: { prefix: 'git', name: 'GitLab Notifications', quota: '2.0' },
-            backend: { prefix: 'app-backend', name: 'Application API Backend', quota: '2.0' },
-            alerts: { prefix: 'alerts', name: 'Alertmanager & Monitoring', quota: '1.0' },
-            custom: { prefix: 'mailer', name: 'Custom App Mailer', quota: '2.0' }
+            backend: { prefix: 'app-backend', name: 'Backend API Service', quota: '2.0' },
+            alerts: { prefix: 'alerts', name: 'System Monitoring', quota: '1.0' },
+            custom: { prefix: 'mailer', name: 'Application Mailer', quota: '2.0' }
         };
+
+        // --- Theme Management ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('ternis_theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                setTheme('light');
+            } else {
+                setTheme('dark');
+            }
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('ternis_theme', theme);
+            const isDark = theme === 'dark';
+            document.getElementById('themeIconSun').classList.toggle('hidden', !isDark);
+            document.getElementById('themeIconMoon').classList.toggle('hidden', isDark);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        }
 
         // --- Init ---
         document.addEventListener('DOMContentLoaded', async () => {
+            initTheme();
             initPinInputs();
             generateNewPassword();
 
@@ -798,7 +1047,7 @@
             el.className = `alert alert-${type}`;
             el.innerText = msg;
             el.classList.remove('hidden');
-            setTimeout(() => { el.classList.add('hidden'); }, 6000);
+            setTimeout(() => { el.classList.add('hidden'); }, 5000);
         }
 
         async function verifyCurrentSession() {
@@ -844,7 +1093,7 @@
                 if (!res.ok) {
                     showAlert(data.detail || 'Failed to request verification code.');
                     btn.disabled = false;
-                    btn.innerText = '✉️ Send Verification Code to Postmaster';
+                    btn.innerText = 'Send Verification Code';
                     return;
                 }
 
@@ -860,7 +1109,7 @@
                 showAlert('Network error requesting verification code.');
             } finally {
                 btn.disabled = false;
-                btn.innerText = '✉️ Send Verification Code to Postmaster';
+                btn.innerText = 'Send Verification Code';
             }
         }
 
@@ -871,7 +1120,7 @@
             }
 
             if (pin.length !== 6) {
-                showAlert('Please enter the full 6-digit verification code.');
+                showAlert('Please enter the full 6-digit code.');
                 return;
             }
 
@@ -890,7 +1139,7 @@
                 if (!res.ok) {
                     showAlert(data.detail || 'Verification failed. Please check the code.');
                     btn.disabled = false;
-                    btn.innerText = '🔐 Verify & Log In';
+                    btn.innerText = 'Verify and Continue';
                     return;
                 }
 
@@ -899,13 +1148,13 @@
                 localStorage.setItem('ternis_mail_domain', currentDomain);
 
                 clearInterval(countdownInterval);
-                showAlert('Domain verified successfully!', 'success');
+                showAlert('Domain verified successfully.', 'success');
                 showDashboard();
             } catch (err) {
                 showAlert('Error submitting verification code.');
             } finally {
                 btn.disabled = false;
-                btn.innerText = '🔐 Verify & Log In';
+                btn.innerText = 'Verify and Continue';
             }
         }
 
@@ -934,7 +1183,7 @@
             document.getElementById('viewAuth').classList.add('hidden');
             document.getElementById('viewDashboard').classList.remove('hidden');
             document.getElementById('authHeaderBar').classList.remove('hidden');
-            document.getElementById('currentDomainBadge').textContent = `🌐 ${currentDomain}`;
+            document.getElementById('currentDomainBadge').textContent = currentDomain;
             document.getElementById('domainSuffixAddon').textContent = `@${currentDomain}`;
             applyPreset('nextcloud');
             loadMailboxes();
@@ -1012,14 +1261,19 @@
         function copyPasswordInput() {
             const input = document.getElementById('appPassword');
             navigator.clipboard.writeText(input.value);
-            showAlert('Password copied to clipboard!', 'info');
+            showAlert('Password copied to clipboard.', 'info');
         }
 
         // --- Presets ---
-        function applyPreset(key) {
+        function applyPreset(key, event) {
             document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
             const p = PRESETS[key] || PRESETS.custom;
-            event && event.currentTarget && event.currentTarget.classList.add('active');
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else {
+                const first = document.querySelector(`.preset-pill`);
+                if (first) first.classList.add('active');
+            }
 
             document.getElementById('appLocalPart').value = p.prefix;
             document.getElementById('appName').value = p.name;
@@ -1041,7 +1295,7 @@
 
             const btn = document.getElementById('btnCreateApp');
             btn.disabled = true;
-            btn.innerText = 'Provisioning Mailbox...';
+            btn.innerText = 'Provisioning...';
 
             try {
                 const res = await fetch(`${API_BASE}/app-accounts`, {
@@ -1065,14 +1319,14 @@
                     return;
                 }
 
-                showAlert(`Mailbox ${data.mailbox.email} created successfully!`, 'success');
+                showAlert(`Mailbox ${data.mailbox.email} created successfully.`, 'success');
                 displayResultSnippets(data);
                 loadMailboxes();
             } catch (err) {
-                showAlert('Network error provisioning application account.');
+                showAlert('Network error provisioning account.');
             } finally {
                 btn.disabled = false;
-                btn.innerText = '🚀 Provision Account & Generate Snippets';
+                btn.innerText = 'Provision Account';
             }
         }
 
@@ -1133,7 +1387,7 @@
         function copySnippet(elementId) {
             const text = document.getElementById(elementId).textContent;
             navigator.clipboard.writeText(text);
-            showAlert('Configuration snippet copied to clipboard!', 'info');
+            showAlert('Configuration copied to clipboard.', 'info');
         }
 
         // --- Mailbox List & Management ---
@@ -1160,23 +1414,23 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><span class="status-dot"></span> Active</td>
-                        <td><strong style="color: #38bdf8; font-family: monospace;">${m.email}</strong></td>
-                        <td>${m.quota_gb} GB</td>
+                        <td><strong style="font-family: monospace;">${m.email}</strong></td>
+                        <td style="color: var(--text-muted);">${m.quota_gb} GB</td>
                         <td style="color: var(--text-muted); font-size: 0.8rem;">${m.created_at ? m.created_at.split(' ')[0] : '-'}</td>
                         <td style="text-align: right;">
-                            <button class="btn btn-secondary btn-sm" onclick="openResetModal('${m.email}')">🔑 Reset Pass</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteAccount('${m.email}')">🗑️</button>
+                            <button class="btn btn-secondary btn-sm" onclick="openResetModal('${m.email}')">Reset</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAccount('${m.email}')">Delete</button>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 });
             } catch (err) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 18px;">Failed to load mailboxes.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--error); padding: 18px;">Failed to load accounts.</td></tr>';
             }
         }
 
         async function deleteAccount(email) {
-            if (!confirm(`Are you sure you want to delete mailbox ${email}? This cannot be undone.`)) return;
+            if (!confirm(`Are you sure you want to delete mailbox ${email}?`)) return;
 
             try {
                 const res = await fetch(`${API_BASE}/mailboxes/${encodeURIComponent(email)}?purge=false`, {
@@ -1233,7 +1487,7 @@
                 });
 
                 if (res.ok) {
-                    showAlert(`Password updated for ${currentResetEmail}!`, 'success');
+                    showAlert(`Password updated for ${currentResetEmail}.`, 'success');
                     closeResetModal();
                 } else {
                     showAlert('Failed to reset password.');
@@ -1242,7 +1496,7 @@
                 showAlert('Network error resetting password.');
             } finally {
                 btn.disabled = false;
-                btn.innerText = 'Update Password';
+                btn.innerText = 'Save Password';
             }
         }
     </script>
