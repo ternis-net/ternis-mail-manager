@@ -238,7 +238,7 @@ When a user requests a verification code for `<domain>`:
 
 ### Privacy & Anti-Scraping Safeguards
 To prevent attackers from probing domain names to discover private email addresses:
-* The web interface and public REST API response mask the destination (e.g. `ad***n@my-company.net`).
+* The web interface and public REST API response mask the destination (e.g. `ad***n@my-company.net`). `// note: This is fully unneccessary (because the "attacker" could just check the DNS anyways)`
 * The dispatched email clearly states the resolution method (`via DNS TXT record _postmaster.<domain>` vs `default mailbox postmaster@<domain>`).
 
 ---
