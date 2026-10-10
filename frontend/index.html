@@ -34,6 +34,9 @@
             --error: #b91c1c;
             --error-bg: #fef2f2;
             --error-border: #fecaca;
+            --warning: #b45309;
+            --warning-bg: #fffbeb;
+            --warning-border: #fde68a;
             --info: #2563eb;
             --info-bg: #eff6ff;
             --info-border: #bfdbfe;
@@ -68,6 +71,9 @@
             --error: #f87171;
             --error-bg: #450a0a;
             --error-border: #7f1d1d;
+            --warning: #fbbf24;
+            --warning-bg: #451a03;
+            --warning-border: #78350f;
             --info: #60a5fa;
             --info-bg: #172554;
             --info-border: #1e3a8a;
@@ -93,7 +99,7 @@
 
         .container {
             width: 100%;
-            max-width: 860px;
+            max-width: 900px;
         }
 
         /* Header */
@@ -101,8 +107,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
+            margin-bottom: 28px;
+            padding-bottom: 18px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -173,6 +179,42 @@
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+
+        /* Navigation Switcher Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .nav-tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 14px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.15s, background-color 0.15s;
+        }
+
+        .nav-tab-btn:hover {
+            color: var(--text);
+            background: var(--bg-sub);
+        }
+
+        .nav-tab-btn.active {
+            color: var(--text);
+            background: var(--bg-sub);
+            font-weight: 600;
+            border: 1px solid var(--border);
         }
 
         /* Buttons */
@@ -386,6 +428,36 @@
             font-family: monospace;
         }
 
+        /* Mode Switcher Pills */
+        .mode-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .mode-pill {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 0.825rem;
+            cursor: pointer;
+            background: var(--bg);
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+
+        .mode-pill:hover {
+            color: var(--text);
+            background: var(--bg-sub);
+        }
+
+        .mode-pill.active {
+            color: var(--text);
+            background: var(--bg-sub);
+            border-color: var(--border-focus);
+            font-weight: 600;
+        }
+
         /* Result Snippet Box */
         .snippet-card {
             background: var(--bg-sub);
@@ -503,6 +575,36 @@
             margin-right: 6px;
         }
 
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .status-badge-ok {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success-border);
+        }
+
+        .status-badge-missing {
+            background: var(--error-bg);
+            color: var(--error);
+            border: 1px solid var(--error-border);
+        }
+
+        .status-badge-warning {
+            background: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid var(--warning-border);
+        }
+
         /* Alerts */
         .alert {
             padding: 10px 14px;
@@ -605,7 +707,7 @@
                 </div>
                 <div>
                     <div class="brand-title">one.mx.ternis.net</div>
-                    <div class="brand-subtitle">Application Mail Accounts</div>
+                    <div class="brand-subtitle">Application Mail Gateway</div>
                 </div>
             </a>
             <div class="header-actions">
@@ -613,7 +715,7 @@
                     <span id="currentDomainBadge" class="badge-domain">domain.com</span>
                     <button id="logoutBtn" class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
                 </div>
-                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle color theme" aria-label="Toggle theme">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
                     <svg id="themeIconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="hidden">
                         <circle cx="12" cy="12" r="5"></circle>
                         <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -703,240 +805,360 @@
         <!-- VIEW 2: APPLICATION DASHBOARD              -->
         <!-- ========================================== -->
         <div id="viewDashboard" class="hidden">
-            <!-- Provision Form Card -->
-            <div class="card">
-                <div class="flex flex-between">
-                    <div>
-                        <h2 style="font-size: 1.15rem; font-weight: 600;">Provision Application Account</h2>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">
-                            Configure dedicated mailboxes for backend applications, storage systems, and transactional services.
+            <!-- Navigation Switcher -->
+            <div class="nav-tabs">
+                <button class="nav-tab-btn active" id="navBtnMailboxes" onclick="switchNavTab('mailboxes')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span>Mailboxes &amp; Presets</span>
+                </button>
+                <button class="nav-tab-btn" id="navBtnDns" onclick="switchNavTab('dns')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span>DNS Health &amp; Verification</span>
+                </button>
+            </div>
+
+            <!-- TAB 1: MAILBOXES & SUBDOMAINS -->
+            <div id="panelMailboxes">
+                <!-- Provision Form Card -->
+                <div class="card">
+                    <div class="flex flex-between">
+                        <div>
+                            <h2 style="font-size: 1.15rem; font-weight: 600;">Provision Application Mailbox</h2>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">
+                                Create dedicated mailboxes under your domain or custom subdomains with automated config snippets.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Domain vs Subdomain Mode Picker -->
+                    <div class="mt-4">
+                        <label class="form-label">Domain Scope</label>
+                        <div class="mode-toggle">
+                            <div class="mode-pill active" id="modePillPrimary" onclick="setDomainMode('primary')">
+                                Primary Domain (<span id="pillPrimaryLabel">domain.com</span>)
+                            </div>
+                            <div class="mode-pill" id="modePillSubdomain" onclick="setDomainMode('subdomain')">
+                                Subdomain (<span id="pillSubdomainLabel">sub.domain.com</span>)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subdomain Input (Visible only in Subdomain mode) -->
+                    <div id="subdomainConfigRow" class="form-group hidden" style="background: var(--bg-sub); border: 1px solid var(--border); border-radius: 6px; padding: 14px;">
+                        <label class="form-label">Subdomain Name</label>
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                            <div class="input-addon-group">
+                                <input type="text" id="subdomainPrefixInput" class="form-input" placeholder="e.g. cloud, app, or staging" oninput="updateSubdomainPreview()">
+                                <span id="subdomainParentSuffix" class="input-addon">.domain.com</span>
+                            </div>
+                            <select id="existingSubdomainsSelect" class="form-select" onchange="selectExistingSubdomain()">
+                                <option value="">-- Or existing subdomain --</option>
+                            </select>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">
+                            The system will register this subdomain in the mail gateway, provision a 2048-bit DKIM key, and generate complete DNS zone records.
                         </p>
                     </div>
-                </div>
 
-                <div class="mt-4">
-                    <label class="form-label">Application Template</label>
-                    <div class="presets-grid">
-                        <div class="preset-pill active" onclick="applyPreset('nextcloud', event)">
-                            <span class="preset-name">Nextcloud</span>
-                            <span class="preset-prefix">nextcloud@</span>
-                        </div>
-                        <div class="preset-pill" onclick="applyPreset('wordpress', event)">
-                            <span class="preset-name">WordPress</span>
-                            <span class="preset-prefix">wordpress@</span>
-                        </div>
-                        <div class="preset-pill" onclick="applyPreset('gitlab', event)">
-                            <span class="preset-name">GitLab</span>
-                            <span class="preset-prefix">git@</span>
-                        </div>
-                        <div class="preset-pill" onclick="applyPreset('backend', event)">
-                            <span class="preset-name">Backend API</span>
-                            <span class="preset-prefix">app-backend@</span>
-                        </div>
-                        <div class="preset-pill" onclick="applyPreset('alerts', event)">
-                            <span class="preset-name">Monitoring</span>
-                            <span class="preset-prefix">alerts@</span>
-                        </div>
-                        <div class="preset-pill" onclick="applyPreset('custom', event)">
-                            <span class="preset-name">Custom</span>
-                            <span class="preset-prefix">mailer@</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                    <div class="form-group">
-                        <label class="form-label">Account Local Part</label>
-                        <div class="input-addon-group">
-                            <input type="text" id="appLocalPart" class="form-input" value="nextcloud" placeholder="nextcloud">
-                            <span id="domainSuffixAddon" class="input-addon">@domain.com</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Application Description</label>
-                        <input type="text" id="appName" class="form-input" value="Nextcloud Storage" placeholder="Nextcloud Server">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
-                    <div class="form-group">
-                        <div class="flex flex-between" style="margin-bottom: 6px;">
-                            <label class="form-label" style="margin-bottom: 0;">Mailbox Password</label>
-                            <a href="javascript:void(0)" onclick="generateNewPassword()" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px;">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <polyline points="23 4 23 10 17 10"></polyline>
-                                    <polyline points="1 20 1 14 7 14"></polyline>
-                                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                                </svg>
-                                Regenerate
-                            </a>
-                        </div>
-                        <div class="input-addon-group">
-                            <input type="text" id="appPassword" class="form-input" style="font-family: monospace; font-size: 0.85rem;">
-                            <span class="input-addon" style="cursor: pointer;" onclick="copyPasswordInput()" title="Copy password">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Quota</label>
-                        <select id="appQuota" class="form-select">
-                            <option value="1.0">1 GB (Transactional)</option>
-                            <option value="2.0" selected>2 GB (Standard)</option>
-                            <option value="5.0">5 GB (High Volume)</option>
-                            <option value="10.0">10 GB (Full Mailbox)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mt-2 flex flex-between">
-                    <span style="font-size: 0.8rem; color: var(--text-dim); font-family: monospace;">
-                        Host: one.mx.ternis.net (465 SSL / 587 STARTTLS)
-                    </span>
-                    <button id="btnCreateApp" class="btn" onclick="createAppAccount()">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="16"></line>
-                            <line x1="8" y1="12" x2="16" y2="12"></line>
-                        </svg>
-                        <span>Provision Account</span>
-                    </button>
-                </div>
-
-                <!-- Instant Result & Ready-to-Paste Config Snippets -->
-                <div id="provisionResultCard" class="snippet-card hidden">
-                    <div class="flex flex-between" style="margin-bottom: 14px;">
-                        <div>
-                            <span style="color: var(--success); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
-                                Account Created
-                            </span>
-                            <h3 id="resultEmailTitle" style="font-size: 1.05rem; margin-top: 4px; font-family: monospace;">nextcloud@domain.com</h3>
-                        </div>
-                        <button class="btn btn-secondary btn-sm" onclick="dismissResultCard()">Dismiss</button>
-                    </div>
-
-                    <!-- Credential Quick View -->
-                    <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 0.8rem;">
-                        <div>
-                            <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Host</span>
-                            <span style="font-family: monospace;">one.mx.ternis.net</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Ports</span>
-                            <span style="font-family: monospace;">465 SSL &bull; 587 TLS</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Username</span>
-                            <span id="resultUsername" style="font-family: monospace;">nextcloud@...</span>
-                        </div>
-                    </div>
-
-                    <!-- Config Snippet Tabs -->
-                    <div class="tabs">
-                        <button class="tab-btn active" onclick="switchSnippetTab('nextcloud-ui')">Nextcloud UI Settings</button>
-                        <button class="tab-btn" onclick="switchSnippetTab('nextcloud-php')">config.php</button>
-                        <button class="tab-btn" onclick="switchSnippetTab('env')">Environment (.env)</button>
-                        <button class="tab-btn" onclick="switchSnippetTab('starttls')">STARTTLS (587)</button>
-                    </div>
-
-                    <!-- Tab Contents -->
-                    <div id="tabContentNextcloudUi">
-                        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 0.8rem; line-height: 1.5;">
-                            <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 8px;">
-                                Basic Settings &rarr; Email Server
+                    <div class="mt-4">
+                        <label class="form-label">Application Template</label>
+                        <div class="presets-grid">
+                            <div class="preset-pill active" onclick="applyPreset('nextcloud', event)">
+                                <span class="preset-name">Nextcloud</span>
+                                <span class="preset-prefix">nextcloud@</span>
                             </div>
-                            <table style="margin-top: 0;">
-                                <tr><td style="color: var(--text-muted); width: 160px;">Send mode:</td><td><strong>SMTP</strong></td></tr>
-                                <tr><td style="color: var(--text-muted);">Encryption:</td><td><strong>SSL/TLS</strong></td></tr>
-                                <tr><td style="color: var(--text-muted);">From address:</td><td><span id="ncFromAddr" style="font-family: monospace;">nextcloud</span> @ <span id="ncFromDomain" style="font-family: monospace;">domain.com</span></td></tr>
-                                <tr><td style="color: var(--text-muted);">Authentication:</td><td><strong>Credentials required (enabled)</strong></td></tr>
-                                <tr><td style="color: var(--text-muted);">Authentication method:</td><td><strong>LOGIN</strong></td></tr>
-                                <tr><td style="color: var(--text-muted);">Server address:</td><td><strong style="font-family: monospace;">one.mx.ternis.net</strong> : <strong style="font-family: monospace;">465</strong></td></tr>
-                                <tr><td style="color: var(--text-muted);">Credentials:</td><td><span id="ncUser" style="font-family: monospace;">...</span> / <span id="ncPass" style="font-family: monospace;">...</span></td></tr>
-                            </table>
+                            <div class="preset-pill" onclick="applyPreset('wordpress', event)">
+                                <span class="preset-name">WordPress</span>
+                                <span class="preset-prefix">wordpress@</span>
+                            </div>
+                            <div class="preset-pill" onclick="applyPreset('gitlab', event)">
+                                <span class="preset-name">GitLab</span>
+                                <span class="preset-prefix">git@</span>
+                            </div>
+                            <div class="preset-pill" onclick="applyPreset('backend', event)">
+                                <span class="preset-name">Backend API</span>
+                                <span class="preset-prefix">app-backend@</span>
+                            </div>
+                            <div class="preset-pill" onclick="applyPreset('alerts', event)">
+                                <span class="preset-name">Monitoring</span>
+                                <span class="preset-prefix">alerts@</span>
+                            </div>
+                            <div class="preset-pill" onclick="applyPreset('custom', event)">
+                                <span class="preset-name">Custom</span>
+                                <span class="preset-prefix">mailer@</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="tabContentNextcloudPhp" class="hidden">
-                        <div style="position: relative;">
-                            <button class="copy-btn" onclick="copySnippet('codeNextcloudPhp')">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                                Copy
-                            </button>
-                            <pre><code id="codeNextcloudPhp"></code></pre>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label class="form-label">Account Local Part</label>
+                            <div class="input-addon-group">
+                                <input type="text" id="appLocalPart" class="form-input" value="nextcloud" placeholder="nextcloud">
+                                <span id="domainSuffixAddon" class="input-addon">@domain.com</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Application Description</label>
+                            <input type="text" id="appName" class="form-input" value="Nextcloud Storage" placeholder="Nextcloud Server">
                         </div>
                     </div>
 
-                    <div id="tabContentEnv" class="hidden">
-                        <div style="position: relative;">
-                            <button class="copy-btn" onclick="copySnippet('codeEnv')">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                                Copy
-                            </button>
-                            <pre><code id="codeEnv"></code></pre>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <div class="flex flex-between" style="margin-bottom: 6px;">
+                                <label class="form-label" style="margin-bottom: 0;">Mailbox Password</label>
+                                <a href="javascript:void(0)" onclick="generateNewPassword()" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <polyline points="23 4 23 10 17 10"></polyline>
+                                        <polyline points="1 20 1 14 7 14"></polyline>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                    </svg>
+                                    Regenerate
+                                </a>
+                            </div>
+                            <div class="input-addon-group">
+                                <input type="text" id="appPassword" class="form-input" style="font-family: monospace; font-size: 0.85rem;">
+                                <span class="input-addon" style="cursor: pointer;" onclick="copyPasswordInput()" title="Copy password">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Quota</label>
+                            <select id="appQuota" class="form-select">
+                                <option value="1.0">1 GB (Transactional)</option>
+                                <option value="2.0" selected>2 GB (Standard)</option>
+                                <option value="5.0">5 GB (High Volume)</option>
+                                <option value="10.0">10 GB (Full Mailbox)</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div id="tabContentStarttls" class="hidden">
-                        <div style="position: relative;">
-                            <button class="copy-btn" onclick="copySnippet('codeStarttls')">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                                Copy
-                            </button>
-                            <pre><code id="codeStarttls"></code></pre>
+                    <div class="mt-2 flex flex-between">
+                        <span style="font-size: 0.8rem; color: var(--text-dim); font-family: monospace;">
+                            Target: <span id="targetSummaryAddress">nextcloud@domain.com</span>
+                        </span>
+                        <button id="btnCreateApp" class="btn" onclick="createAppAccount()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                            <span>Provision Account</span>
+                        </button>
+                    </div>
+
+                    <!-- Instant Result & Ready-to-Paste Config Snippets -->
+                    <div id="provisionResultCard" class="snippet-card hidden">
+                        <div class="flex flex-between" style="margin-bottom: 14px;">
+                            <div>
+                                <span style="color: var(--success); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Account Created
+                                </span>
+                                <h3 id="resultEmailTitle" style="font-size: 1.05rem; margin-top: 4px; font-family: monospace;">nextcloud@domain.com</h3>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="dismissResultCard()">Dismiss</button>
                         </div>
+
+                        <!-- Credential Quick View -->
+                        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 0.8rem;">
+                            <div>
+                                <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Host</span>
+                                <span style="font-family: monospace;">one.mx.ternis.net</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Ports</span>
+                                <span style="font-family: monospace;">465 SSL &bull; 587 TLS</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-dim); display: block; font-size: 0.7rem; text-transform: uppercase;">Username</span>
+                                <span id="resultUsername" style="font-family: monospace;">nextcloud@...</span>
+                            </div>
+                        </div>
+
+                        <!-- Config Snippet Tabs -->
+                        <div class="tabs">
+                            <button class="tab-btn active" onclick="switchSnippetTab('nextcloud-ui')">Nextcloud UI Settings</button>
+                            <button class="tab-btn" onclick="switchSnippetTab('nextcloud-php')">config.php</button>
+                            <button class="tab-btn" onclick="switchSnippetTab('env')">Environment (.env)</button>
+                            <button class="tab-btn" onclick="switchSnippetTab('starttls')">STARTTLS (587)</button>
+                            <button class="tab-btn hidden" id="tabBtnSubDns" onclick="switchSnippetTab('subdomain-dns')">Subdomain DNS Records</button>
+                        </div>
+
+                        <!-- Tab Contents -->
+                        <div id="tabContentNextcloudUi">
+                            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 0.8rem; line-height: 1.5;">
+                                <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 8px;">
+                                    Basic Settings &rarr; Email Server
+                                </div>
+                                <table style="margin-top: 0;">
+                                    <tr><td style="color: var(--text-muted); width: 160px;">Send mode:</td><td><strong>SMTP</strong></td></tr>
+                                    <tr><td style="color: var(--text-muted);">Encryption:</td><td><strong>SSL/TLS</strong></td></tr>
+                                    <tr><td style="color: var(--text-muted);">From address:</td><td><span id="ncFromAddr" style="font-family: monospace;">nextcloud</span> @ <span id="ncFromDomain" style="font-family: monospace;">domain.com</span></td></tr>
+                                    <tr><td style="color: var(--text-muted);">Authentication:</td><td><strong>Credentials required (enabled)</strong></td></tr>
+                                    <tr><td style="color: var(--text-muted);">Authentication method:</td><td><strong>LOGIN</strong></td></tr>
+                                    <tr><td style="color: var(--text-muted);">Server address:</td><td><strong style="font-family: monospace;">one.mx.ternis.net</strong> : <strong style="font-family: monospace;">465</strong></td></tr>
+                                    <tr><td style="color: var(--text-muted);">Credentials:</td><td><span id="ncUser" style="font-family: monospace;">...</span> / <span id="ncPass" style="font-family: monospace;">...</span></td></tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="tabContentNextcloudPhp" class="hidden">
+                            <div style="position: relative;">
+                                <button class="copy-btn" onclick="copySnippet('codeNextcloudPhp')">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    Copy
+                                </button>
+                                <pre><code id="codeNextcloudPhp"></code></pre>
+                            </div>
+                        </div>
+
+                        <div id="tabContentEnv" class="hidden">
+                            <div style="position: relative;">
+                                <button class="copy-btn" onclick="copySnippet('codeEnv')">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    Copy
+                                </button>
+                                <pre><code id="codeEnv"></code></pre>
+                            </div>
+                        </div>
+
+                        <div id="tabContentStarttls" class="hidden">
+                            <div style="position: relative;">
+                                <button class="copy-btn" onclick="copySnippet('codeStarttls')">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    Copy
+                                </button>
+                                <pre><code id="codeStarttls"></code></pre>
+                            </div>
+                        </div>
+
+                        <div id="tabContentSubDns" class="hidden">
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+                                Publish these DNS records in your domain registrar or DNS management zone:
+                            </p>
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Host / Name</th>
+                                            <th>Value</th>
+                                            <th style="text-align: right;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="subDnsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Existing Mailboxes List Card -->
+                <div class="card">
+                    <div class="flex flex-between">
+                        <div>
+                            <h2 style="font-size: 1.05rem; font-weight: 600;">Configured Accounts</h2>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">
+                                Virtual mailboxes provisioned for this domain
+                            </p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="loadMailboxes()">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Address</th>
+                                    <th>Quota</th>
+                                    <th>Created</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mailboxesTableBody">
+                                <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 18px;">Loading accounts...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Existing Mailboxes List Card -->
-            <div class="card">
-                <div class="flex flex-between">
-                    <div>
-                        <h2 style="font-size: 1.05rem; font-weight: 600;">Configured Accounts</h2>
-                        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 2px;">
-                            Active virtual accounts for this domain
-                        </p>
+            <!-- TAB 2: LIVE DNS HEALTH & VERIFICATION -->
+            <div id="panelDns" class="hidden">
+                <div class="card">
+                    <div class="flex flex-between">
+                        <div>
+                            <h2 style="font-size: 1.15rem; font-weight: 600;">DNS Zone Status &amp; Verification</h2>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">
+                                Real-time verification of MX, SPF, DKIM, DMARC, Autoconfig, and Autodiscover records in your live DNS zone.
+                            </p>
+                        </div>
+                        <button id="btnRefreshDns" class="btn btn-secondary btn-sm" onclick="checkLiveDnsHealth()">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Verify DNS Zone
+                        </button>
                     </div>
-                    <button class="btn btn-secondary btn-sm" onclick="loadMailboxes()">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <polyline points="23 4 23 10 17 10"></polyline>
-                            <polyline points="1 20 1 14 7 14"></polyline>
-                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                        </svg>
-                        Refresh
-                    </button>
-                </div>
 
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Address</th>
-                                <th>Quota</th>
-                                <th>Created</th>
-                                <th style="text-align: right;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mailboxesTableBody">
-                            <tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 18px;">Loading accounts...</td></tr>
-                        </tbody>
-                    </table>
+                    <!-- Domain selector for DNS inspection -->
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 16px;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Inspecting:</span>
+                        <select id="dnsInspectDomainSelect" class="form-select" style="max-width: 280px; padding: 6px 10px; font-size: 0.85rem;" onchange="checkLiveDnsHealth()">
+                        </select>
+                        <span id="dnsLastCheckedTimestamp" style="font-size: 0.75rem; color: var(--text-dim); font-family: monospace;"></span>
+                    </div>
+
+                    <div class="table-responsive" style="margin-top: 16px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Record</th>
+                                    <th>Name</th>
+                                    <th>Expected Configuration</th>
+                                    <th>Live DNS Value</th>
+                                    <th style="text-align: right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dnsTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">Click "Verify DNS Zone" to run real-time checks.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -982,8 +1204,10 @@
         const API_BASE = '/api/v1';
         let currentToken = localStorage.getItem('ternis_mail_token') || null;
         let currentDomain = localStorage.getItem('ternis_mail_domain') || null;
+        let domainMode = 'primary'; // 'primary' or 'subdomain'
         let countdownInterval = null;
         let currentResetEmail = null;
+        let knownSubdomains = [];
 
         const PRESETS = {
             nextcloud: { prefix: 'nextcloud', name: 'Nextcloud Storage', quota: '2.0' },
@@ -1179,14 +1403,163 @@
             resetAuthStep();
         }
 
-        function showDashboard() {
+        async function showDashboard() {
             document.getElementById('viewAuth').classList.add('hidden');
             document.getElementById('viewDashboard').classList.remove('hidden');
             document.getElementById('authHeaderBar').classList.remove('hidden');
             document.getElementById('currentDomainBadge').textContent = currentDomain;
-            document.getElementById('domainSuffixAddon').textContent = `@${currentDomain}`;
+
+            document.getElementById('pillPrimaryLabel').textContent = currentDomain;
+            document.getElementById('pillSubdomainLabel').textContent = `*.${currentDomain}`;
+            document.getElementById('subdomainParentSuffix').textContent = `.${currentDomain}`;
+
+            setDomainMode('primary');
             applyPreset('nextcloud');
             loadMailboxes();
+            await loadSubdomains();
+            populateDnsInspectorDropdown();
+        }
+
+        // --- Navigation Switcher ---
+        function switchNavTab(tab) {
+            document.getElementById('navBtnMailboxes').classList.toggle('active', tab === 'mailboxes');
+            document.getElementById('navBtnDns').classList.toggle('active', tab === 'dns');
+            document.getElementById('panelMailboxes').classList.toggle('hidden', tab !== 'mailboxes');
+            document.getElementById('panelDns').classList.toggle('hidden', tab !== 'dns');
+
+            if (tab === 'dns') {
+                checkLiveDnsHealth();
+            }
+        }
+
+        // --- Domain vs Subdomain Mode ---
+        function setDomainMode(mode) {
+            domainMode = mode;
+            document.getElementById('modePillPrimary').classList.toggle('active', mode === 'primary');
+            document.getElementById('modePillSubdomain').classList.toggle('active', mode === 'subdomain');
+            document.getElementById('subdomainConfigRow').classList.toggle('hidden', mode !== 'subdomain');
+
+            updateTargetSummary();
+        }
+
+        function updateSubdomainPreview() {
+            updateTargetSummary();
+        }
+
+        function getActiveTargetDomain() {
+            if (domainMode === 'subdomain') {
+                const prefix = document.getElementById('subdomainPrefixInput').value.trim().toLowerCase();
+                return prefix ? `${prefix}.${currentDomain}` : `sub.${currentDomain}`;
+            }
+            return currentDomain;
+        }
+
+        function updateTargetSummary() {
+            const dom = getActiveTargetDomain();
+            const local = document.getElementById('appLocalPart').value.trim().toLowerCase() || 'nextcloud';
+            document.getElementById('domainSuffixAddon').textContent = `@${dom}`;
+            document.getElementById('targetSummaryAddress').textContent = `${local}@${dom}`;
+        }
+
+        async function loadSubdomains() {
+            try {
+                const res = await fetch(`${API_BASE}/subdomains`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    knownSubdomains = (data.subdomains || []).map(s => s.domain);
+                    const sel = document.getElementById('existingSubdomainsSelect');
+                    sel.innerHTML = '<option value="">-- Or existing subdomain --</option>';
+                    knownSubdomains.forEach(sub => {
+                        const opt = document.createElement('option');
+                        opt.value = sub;
+                        opt.textContent = sub;
+                        sel.appendChild(opt);
+                    });
+                }
+            } catch (err) {
+                console.error('Failed to load subdomains', err);
+            }
+        }
+
+        function selectExistingSubdomain() {
+            const selVal = document.getElementById('existingSubdomainsSelect').value;
+            if (selVal) {
+                // Strip parent domain from prefix input
+                const prefix = selVal.replace(new RegExp(`\\.?${currentDomain}$`), '');
+                document.getElementById('subdomainPrefixInput').value = prefix;
+                updateSubdomainPreview();
+            }
+        }
+
+        function populateDnsInspectorDropdown() {
+            const sel = document.getElementById('dnsInspectDomainSelect');
+            sel.innerHTML = '';
+
+            const optMain = document.createElement('option');
+            optMain.value = currentDomain;
+            optMain.textContent = `${currentDomain} (Primary)`;
+            sel.appendChild(optMain);
+
+            knownSubdomains.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub;
+                opt.textContent = `${sub} (Subdomain)`;
+                sel.appendChild(opt);
+            });
+        }
+
+        // --- Live DNS Health Check ---
+        async function checkLiveDnsHealth() {
+            const sel = document.getElementById('dnsInspectDomainSelect');
+            const target = (sel && sel.value) ? sel.value : currentDomain;
+
+            const tbody = document.getElementById('dnsTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 18px;">Checking DNS resolvers...</td></tr>';
+
+            const btn = document.getElementById('btnRefreshDns');
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/dns/status?domain=${encodeURIComponent(target)}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+
+                if (!res.ok) throw new Error('DNS check failed');
+                const data = await res.json();
+
+                document.getElementById('dnsLastCheckedTimestamp').textContent = `Checked: ${new Date().toLocaleTimeString()}`;
+                tbody.innerHTML = '';
+
+                (data.records || []).forEach(r => {
+                    const tr = document.createElement('tr');
+                    const badgeClass = r.status === 'ok' ? 'status-badge-ok' : (r.status === 'warning' ? 'status-badge-warning' : 'status-badge-missing');
+                    const badgeText = r.status === 'ok' ? 'Active' : (r.status === 'warning' ? 'Warning' : 'Missing');
+
+                    tr.innerHTML = `
+                        <td><span class="status-badge ${badgeClass}">${badgeText}</span></td>
+                        <td><strong>${r.record_type}</strong></td>
+                        <td style="font-family: monospace; font-size: 0.8rem;">${r.name}</td>
+                        <td style="font-family: monospace; font-size: 0.78rem; max-width: 260px; overflow-wrap: break-word;">${escapeHtml(r.expected || '-')}</td>
+                        <td style="font-family: monospace; font-size: 0.78rem; max-width: 220px; overflow-wrap: break-word; color: var(--text-muted);">${escapeHtml(r.detected || 'None')}</td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-secondary btn-sm" onclick="copyRawText('${escapeAttr(r.expected || '')}')" title="Copy expected configuration value">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                Copy
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--error); padding: 18px;">Failed to verify DNS zone.</td></tr>';
+            } finally {
+                btn.disabled = false;
+            }
         }
 
         // --- Countdown Timer ---
@@ -1279,6 +1652,7 @@
             document.getElementById('appName').value = p.name;
             document.getElementById('appQuota').value = p.quota;
             generateNewPassword();
+            updateTargetSummary();
         }
 
         // --- Account Creation & Config Generation ---
@@ -1298,22 +1672,49 @@
             btn.innerText = 'Provisioning...';
 
             try {
-                const res = await fetch(`${API_BASE}/app-accounts`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentToken}`
-                    },
-                    body: JSON.stringify({
-                        domain: currentDomain,
-                        local_part: localPart,
-                        password: password,
-                        app_name: appName,
-                        quota_gb: quotaGb
-                    })
-                });
+                let res, data;
 
-                const data = await res.json();
+                if (domainMode === 'subdomain') {
+                    const prefix = document.getElementById('subdomainPrefixInput').value.trim().toLowerCase();
+                    if (!prefix) {
+                        showAlert('Please enter a subdomain prefix (e.g. cloud or app).');
+                        btn.disabled = false;
+                        btn.innerText = 'Provision Account';
+                        return;
+                    }
+
+                    res = await fetch(`${API_BASE}/subdomains/mailbox`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${currentToken}`
+                        },
+                        body: JSON.stringify({
+                            subdomain: prefix,
+                            local_part: localPart,
+                            password: password,
+                            app_name: appName,
+                            quota_gb: quotaGb
+                        })
+                    });
+                } else {
+                    res = await fetch(`${API_BASE}/app-accounts`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${currentToken}`
+                        },
+                        body: JSON.stringify({
+                            domain: currentDomain,
+                            local_part: localPart,
+                            password: password,
+                            app_name: appName,
+                            quota_gb: quotaGb
+                        })
+                    });
+                }
+
+                data = await res.json();
                 if (!res.ok) {
                     showAlert(data.detail || 'Failed to create mailbox.');
                     return;
@@ -1322,6 +1723,8 @@
                 showAlert(`Mailbox ${data.mailbox.email} created successfully.`, 'success');
                 displayResultSnippets(data);
                 loadMailboxes();
+                await loadSubdomains();
+                populateDnsInspectorDropdown();
             } catch (err) {
                 showAlert('Network error provisioning account.');
             } finally {
@@ -1348,9 +1751,37 @@
             document.getElementById('codeEnv').textContent = cfg.env;
             document.getElementById('codeStarttls').textContent = cfg.env_starttls;
 
+            // Subdomain DNS tab
+            const tabBtnSubDns = document.getElementById('tabBtnSubDns');
+            if (data.dns_records && data.dns_records.length > 0) {
+                tabBtnSubDns.classList.remove('hidden');
+                renderSubdomainDnsTable(data.dns_records);
+            } else {
+                tabBtnSubDns.classList.add('hidden');
+            }
+
             document.getElementById('provisionResultCard').classList.remove('hidden');
             switchSnippetTab('nextcloud-ui');
             document.getElementById('provisionResultCard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderSubdomainDnsTable(records) {
+            const tbody = document.getElementById('subDnsTableBody');
+            tbody.innerHTML = '';
+            records.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${r.record_type}</strong></td>
+                    <td style="font-family: monospace; font-size: 0.8rem;">${r.name}</td>
+                    <td style="font-family: monospace; font-size: 0.78rem; max-width: 320px; overflow-wrap: break-word;">${escapeHtml(r.value)}</td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-secondary btn-sm" onclick="copyRawText('${escapeAttr(r.value)}')">
+                            Copy
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         function dismissResultCard() {
@@ -1359,35 +1790,49 @@
 
         function switchSnippetTab(tab) {
             document.querySelectorAll('.tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
-            ['nextcloud-ui', 'nextcloud-php', 'env', 'starttls'].forEach(t => {
+            ['nextcloud-ui', 'nextcloud-php', 'env', 'starttls', 'subdomain-dns'].forEach(t => {
                 const map = {
                     'nextcloud-ui': 'tabContentNextcloudUi',
                     'nextcloud-php': 'tabContentNextcloudPhp',
                     'env': 'tabContentEnv',
-                    'starttls': 'tabContentStarttls'
+                    'starttls': 'tabContentStarttls',
+                    'subdomain-dns': 'tabContentSubDns'
                 };
-                document.getElementById(map[t]).classList.add('hidden');
+                const el = document.getElementById(map[t]);
+                if (el) el.classList.add('hidden');
             });
 
-            if (tab === 'nextcloud-ui') {
-                document.querySelectorAll('.tabs .tab-btn')[0].classList.add('active');
-                document.getElementById('tabContentNextcloudUi').classList.remove('hidden');
-            } else if (tab === 'nextcloud-php') {
-                document.querySelectorAll('.tabs .tab-btn')[1].classList.add('active');
-                document.getElementById('tabContentNextcloudPhp').classList.remove('hidden');
-            } else if (tab === 'env') {
-                document.querySelectorAll('.tabs .tab-btn')[2].classList.add('active');
-                document.getElementById('tabContentEnv').classList.remove('hidden');
-            } else if (tab === 'starttls') {
-                document.querySelectorAll('.tabs .tab-btn')[3].classList.add('active');
-                document.getElementById('tabContentStarttls').classList.remove('hidden');
-            }
+            const tabMap = {
+                'nextcloud-ui': 0,
+                'nextcloud-php': 1,
+                'env': 2,
+                'starttls': 3,
+                'subdomain-dns': 4
+            };
+            const btnIdx = tabMap[tab];
+            const btns = document.querySelectorAll('.tabs .tab-btn');
+            if (btns[btnIdx]) btns[btnIdx].classList.add('active');
+
+            const contentMap = {
+                'nextcloud-ui': 'tabContentNextcloudUi',
+                'nextcloud-php': 'tabContentNextcloudPhp',
+                'env': 'tabContentEnv',
+                'starttls': 'tabContentStarttls',
+                'subdomain-dns': 'tabContentSubDns'
+            };
+            const targetEl = document.getElementById(contentMap[tab]);
+            if (targetEl) targetEl.classList.remove('hidden');
         }
 
         function copySnippet(elementId) {
             const text = document.getElementById(elementId).textContent;
             navigator.clipboard.writeText(text);
             showAlert('Configuration copied to clipboard.', 'info');
+        }
+
+        function copyRawText(text) {
+            navigator.clipboard.writeText(text);
+            showAlert('Value copied to clipboard.', 'info');
         }
 
         // --- Mailbox List & Management ---
@@ -1405,7 +1850,7 @@
                 const mbs = data.mailboxes || [];
 
                 if (mbs.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 18px;">No mailboxes provisioned for this domain yet.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 18px;">No mailboxes provisioned yet.</td></tr>';
                     return;
                 }
 
@@ -1498,6 +1943,16 @@
                 btn.disabled = false;
                 btn.innerText = 'Save Password';
             }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function escapeAttr(text) {
+            if (!text) return '';
+            return text.replace(/'/g, "\\'").replace(/"/g, "&quot;");
         }
     </script>
 </body>

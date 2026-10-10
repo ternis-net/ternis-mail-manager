@@ -17,6 +17,14 @@ It specializes in provisioning and configuring dedicated **"Application Mail Acc
   * No public dropdown or domain listing is exposed.
   * Administrators enter their specific domain, and a secure 6-digit login PIN is dispatched directly to `postmaster@<domain>`.
   * Multi-worker database-synchronized verification codes (15-minute TTL, rate limiting, and brute-force protection).
+* 🌐 **Subdomain Mailbox Provisioning:**
+  * One-click registration for subdomains (e.g. `cloud.domain.com`, `alerts.domain.com`).
+  * Automated 2048-bit RSA DKIM key pair generation via `rspamadm dkim_keygen`.
+  * Auto-creates catch-all alias (`@sub.domain` -> `postmaster@domain`) to ensure uninterrupted administrative bounce handling.
+  * Instant generation of required DNS records (MX, SPF, DKIM `mail._domainkey`, DMARC).
+* 🔍 **Live DNS Zone Health Inspection:**
+  * Real-time DNS verification directly querying the public DNS zone via dnspython.
+  * Checks and displays live status (configured vs missing/invalid) for MX, SPF, DKIM, DMARC, Autoconfig, and Autodiscover.
 * ☁️ **Application Presets & Instant Setup:**
   * One-click presets for **Nextcloud**, **WordPress**, **GitLab**, **Docker/Generic Backend (`.env`)**, and **Monitoring/Alertmanager**.
   * Auto-generates high-entropy passwords (24+ characters) and assigns custom quotas (1 GB, 2 GB, 5 GB, 10 GB).
@@ -29,11 +37,12 @@ It specializes in provisioning and configuring dedicated **"Application Mail Acc
   * Manages MariaDB records for virtual domains, mailboxes, and aliases.
   * Computes Dovecot-compatible `SHA512-CRYPT` hashes via `doveadm pw`.
   * Creates physical `Maildir` structure (`cur`, `new`, `tmp`) with `vmail:vmail` permissions.
-* 🛡️ **Cryptographic Domain Isolation:**
-  * Scoped session tokens grant access strictly to the authenticated domain (`403 Forbidden` on unauthorized domains).
-* 🎨 **Lightweight Responsive Web UI:**
+* 🛡️ **Cryptographic Domain & Subdomain Isolation:**
+  * Scoped session tokens grant access strictly to the authenticated domain and its subdomains (`403 Forbidden` on unauthorized domains).
+* 🎨 **Minimalist Flat UI with Dark/Light Mode:**
   * Zero build-step requirement (pure HTML5, CSS variables, vanilla JS).
-  * High-contrast modern dark mode interface.
+  * Flat grayscale design, zero emojis, zero gradients, zero shadows, pure crisp inline SVGs.
+  * Integrated Theme toggle (Light / Dark mode).
 
 ---
 
@@ -170,6 +179,14 @@ Use `deployment/nginx-site.example.conf` as a template for your Nginx configurat
 * `POST /api/v1/auth/request-code` — Request a 6-digit verification code to `postmaster@<domain>`.
 * `POST /api/v1/auth/verify-code` — Verify PIN and receive a domain-scoped session token.
 * `GET /api/v1/auth/session` — Validate active session token.
+
+### Subdomain Provisioning
+* `POST /api/v1/subdomains/mailbox` — Register subdomain, generate DKIM key, setup postmaster catch-all alias, and provision mailbox.
+* `GET /api/v1/subdomains` — List existing subdomains for authenticated domain.
+
+### DNS Records & Live Health Verification
+* `GET /api/v1/dns` — Retrieve required/recommended DNS records (MX, SPF, DKIM, DMARC, Autoconfig, Autodiscover).
+* `GET /api/v1/dns/status` — Real-time live DNS zone query inspecting MX, SPF, DKIM, DMARC, Autoconfig, and Autodiscover status.
 
 ### Application Accounts
 * `POST /api/v1/app-accounts` — Provision application mailbox and generate Nextcloud / `.env` snippets.
