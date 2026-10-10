@@ -202,6 +202,47 @@ Use `deployment/nginx-site.example.conf` as a template for your Nginx configurat
 
 ---
 
+## Dynamic Postmaster DNS Routing (`_postmaster` TXT Record)
+
+### The Problem It Solves
+1. **The Bootstrap Dilemma:** When adding a new domain to the mail gateway, `postmaster@domain.com` might not exist yet, or inbound MX records may not be live. Requiring access to a local mailbox on an unconfigured domain creates a circular dependency.
+2. **Centralized IT / MSP Administration:** Operators managing multiple virtual domains often prefer receiving login verification PINs in a primary operational inbox (e.g., `noc@ternis.net` or `admin@it-provider.de`) rather than accessing separate webmail accounts for every hosted domain.
+3. **Cryptographic Proof of Authority via DNS:** Controlling a domain's authoritative DNS zone is the industry standard proof of domain ownership. By looking up a designated TXT record, the mail gateway delegates login notification routing strictly to the authoritative DNS owner.
+
+### DNS Zone Configuration
+To route login PINs to an external or specific administrative address, publish a TXT record at `_postmaster.<domain>`:
+
+| Record Type | Name / Host | Value / Target | Notes |
+| :--- | :--- | :--- | :--- |
+| **TXT** | `_postmaster` | `admin@external-domain.com` | Standard recommendation |
+| **TXT** | `_postmaster` | `mailto:admin@external-domain.com` | URI syntax supported |
+| **TXT** | `_postmaster` | `v=postmaster1; mailto:admin@...` | RFC / Tag syntax supported |
+| **TXT** | `@` (Apex) | `postmaster=admin@external-domain.com` | Apex tag alternative |
+
+#### BIND Zone File Example:
+```text
+; Dynamic Postmaster Login Routing
+_postmaster.example.com.    IN  TXT  "admin@my-company.net"
+```
+
+### Fallback Hierarchy
+When a user requests a verification code for `<domain>`:
+1. `_postmaster.<domain>` TXT record is queried via `dnspython`.
+2. `_ternis-postmaster.<domain>` TXT record is checked.
+3. `<domain>` apex TXT record is parsed for `postmaster=` or `v=postmaster1;`.
+4. If `<domain>` is a subdomain (e.g. `cloud.example.com`), `_postmaster.example.com` is checked.
+5. If no valid record is discovered or DNS times out (2.5s timeout), the system defaults safely to:
+   ```text
+   postmaster@<domain>
+   ```
+
+### Privacy & Anti-Scraping Safeguards
+To prevent attackers from probing domain names to discover private email addresses:
+* The web interface and public REST API response mask the destination (e.g. `ad***n@my-company.net`).
+* The dispatched email clearly states the resolution method (`via DNS TXT record _postmaster.<domain>` vs `default mailbox postmaster@<domain>`).
+
+---
+
 ## Security Considerations
 
 1. **Anti-Enumeration:** The system deliberately does not list available domains publicly. Requests require exact domain names.
