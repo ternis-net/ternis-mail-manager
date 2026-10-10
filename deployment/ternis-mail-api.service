@@ -1,0 +1,17 @@
+[Unit]
+Description=Ternis Mail Management REST API & Application Mail Gateway
+After=network.target mariadb.service dovecot.service postfix.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/ternis-mail-manager/backend
+ExecStart=/usr/bin/python3 -m uvicorn app:app --host 127.0.0.1 --port 8088 --workers 2
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
