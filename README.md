@@ -202,6 +202,127 @@ Use `deployment/nginx-site.example.conf` as a template for your Nginx configurat
 
 ---
 
+## Root Administrative REST API (Full Superadmin Access)
+
+For autonomous infrastructure orchestration, server administrators, hosting panels, and deployment pipelines, the Ternis Mail API exposes a high-privilege administrative interface under `/api/v1/admin/*`.
+
+Requests require a Root Bearer token (issued with `domain: "*"` or defined via `MASTER_API_KEY` / `ADMIN_API_KEY` environment variable):
+
+```http
+Authorization: Bearer <ROOT_API_TOKEN>
+```
+
+Interactive OpenAPI Swagger UI is available at:
+```text
+https://one.mx.ternis.net/docs
+```
+
+### Root Endpoints Matrix
+
+| HTTP Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| **System** | | |
+| `GET` | `/api/v1/admin/stats` | Global metrics: domain/mailbox/alias totals, `/var/vmail` disk capacity, Postfix queue counts, systemd daemon states |
+| **Domains** | | |
+| `GET` | `/api/v1/admin/domains` | Paginated list of all virtual domains with search, active filter, mailbox counts, and DKIM presence |
+| `POST` | `/api/v1/admin/domains` | Provision new virtual domain; automatically generates 2048-bit RSA DKIM key via rspamadm; optional postmaster mailbox & catch-all |
+| `GET` | `/api/v1/admin/domains/{domain}` | Deep domain inspection: mailboxes, aliases, DKIM keys, and live DNS health status |
+| `PATCH` | `/api/v1/admin/domains/{domain}` | Enable or disable a domain |
+| `DELETE` | `/api/v1/admin/domains/{domain}` | Delete domain (cascades MySQL users/aliases; optional `purge_storage=true` for `/var/vmail/<domain>` & DKIM key) |
+| `GET` | `/api/v1/admin/domains/{domain}/dkim` | Inspect private and public DKIM keys |
+| `POST` | `/api/v1/admin/domains/{domain}/dkim` | Generate or re-generate 2048-bit DKIM key pair |
+| **Mailboxes** | | |
+| `GET` | `/api/v1/admin/mailboxes` | List all mailboxes across all domains (or filter by `?domain=` or `?search=`) |
+| `POST` | `/api/v1/admin/mailboxes` | Provision mailbox on any domain; hashes password with Dovecot `SHA512-CRYPT`; creates Maildir `cur/new/tmp` with `vmail:vmail` permissions |
+| `GET` | `/api/v1/admin/mailboxes/{email}` | Detailed mailbox properties and disk usage calculation |
+| `PATCH` | `/api/v1/admin/mailboxes/{email}` | Update password, quota (in GB or bytes), or active state |
+| `POST` | `/api/v1/admin/mailboxes/{email}/password` | Instant password reset |
+| `DELETE` | `/api/v1/admin/mailboxes/{email}` | Delete mailbox (optional `purge_storage=true` removes physical Maildir) |
+| **Aliases & Routing** | | |
+| `GET` | `/api/v1/admin/aliases` | List all aliases and catch-alls across all domains |
+| `POST` | `/api/v1/admin/aliases` | Create alias or catch-all (`@domain.com` or `source@domain.com`) to single or multiple destination emails |
+| `GET` | `/api/v1/admin/aliases/{source}` | Inspect specific alias routing |
+| `PATCH` | `/api/v1/admin/aliases/{source}` | Update forwarding destinations or active state |
+| `DELETE` | `/api/v1/admin/aliases/{source}` | Remove alias |
+| **Root Tokens** | | |
+| `GET` | `/api/v1/admin/tokens` | List active administrative and domain-scoped API tokens |
+| `POST` | `/api/v1/admin/tokens` | Issue new Root API token (`domain: "*"`) or scoped domain token |
+| `DELETE` | `/api/v1/admin/tokens/{token_id}` | Revoke an API token |
+
+### Root cURL Examples
+
+#### 1. Server Diagnostics & Mail Queues
+```bash
+curl -s -H "Authorization: Bearer $ROOT_API_KEY" \
+  https://one.mx.ternis.net/api/v1/admin/stats | jq
+```
+
+#### 2. Provision Virtual Domain with DKIM & Postmaster
+```bash
+curl -s -X POST https://one.mx.ternis.net/api/v1/admin/domains \
+  -H "Authorization: Bearer $ROOT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "domain": "customer.org",
+    "create_postmaster": true,
+    "default_alias_destination": "noc@ternis.net"
+  }' | jq
+```
+
+#### 3. Provision Mailbox on Any Domain
+```bash
+curl -s -X POST https://one.mx.ternis.net/api/v1/admin/mailboxes \
+  -H "Authorization: Bearer $ROOT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "billing@customer.org",
+    "quota_gb": 15.0
+  }' | jq
+```
+
+#### 4. Add Multi-Destination Alias or Catch-All
+```bash
+curl -s -X POST https://one.mx.ternis.net/api/v1/admin/aliases \
+  -H "Authorization: Bearer $ROOT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source": "@customer.org",
+    "destination": "admin@customer.org, noc@ternis.net"
+  }' | jq
+```
+
+---
+
+## Root Administrative CLI (`ternis-mail-admin`)
+
+For direct command-line server administration on `one.mx.ternis.net`:
+
+```bash
+# Display server status, quotas, and daemon health
+ternis-mail-admin stats
+
+# List virtual domains
+ternis-mail-admin domains list
+ternis-mail-admin domains add example.com --create-postmaster --catchall admin@ternis.net
+ternis-mail-admin domains delete example.com --purge
+
+# Mailbox operations
+ternis-mail-admin mailboxes list --domain example.com
+ternis-mail-admin mailboxes add user@example.com --quota-gb 5.0
+ternis-mail-admin mailboxes passwd user@example.com --password "NewSecurePass123!"
+ternis-mail-admin mailboxes delete user@example.com --purge
+
+# Alias operations
+ternis-mail-admin aliases list --domain example.com
+ternis-mail-admin aliases add @example.com admin@ternis.net
+ternis-mail-admin aliases delete @example.com
+
+# Machine-readable output for scripts
+ternis-mail-admin --json stats | jq .
+```
+
+---
+
 ## Dynamic Postmaster DNS Routing (`_postmaster` TXT Record)
 
 ### The Problem It Solves

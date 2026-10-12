@@ -90,7 +90,29 @@ tags_metadata = [
         "name": "Admin",
         "description": "Superadmin token creation and revocation (requires token scoped with `domain='*'`).",
     },
+    {
+        "name": "Admin: Domains",
+        "description": "Root management for virtual domains: create, list, inspect, activate, delete (with cascade storage/DKIM purge), and DKIM regeneration.",
+    },
+    {
+        "name": "Admin: Mailboxes",
+        "description": "Root management for virtual mailboxes: create across any domain, list, change passwords, adjust quotas, delete, and inspect storage.",
+    },
+    {
+        "name": "Admin: Aliases",
+        "description": "Root management for virtual aliases and catch-alls: create across any domain, update routes, and delete.",
+    },
+    {
+        "name": "Admin: Tokens",
+        "description": "Root API key issuance, listing, and revocation with wildcard '*' or scoped access.",
+    },
+    {
+        "name": "Admin: System",
+        "description": "Root system observability: domain/mailbox totals, disk usage (/var/vmail), Postfix mail queues, and daemon health.",
+    },
 ]
+
+from admin import admin_router
 
 app = FastAPI(
     title="Ternis Mail Management API",
@@ -101,6 +123,8 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json"
 )
+
+app.include_router(admin_router)
 
 app.add_middleware(
     CORSMiddleware,
